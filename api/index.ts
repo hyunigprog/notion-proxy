@@ -40,7 +40,7 @@ export default async function handler(req: Request, res: Response) {
       return {
         id: page.id,
         harvestMonth: p['📅 수확 월']?.date?.start || null,
-        dividendSource: p['🏧 배당 출처']?.title[0]?.plain_text || null,
+        dividendSource: p['🏧 배당 출처']?.rich_text[0]?.plain_text || null,
         harvestedDividend: p['💵 수확한 배당금(USD)']?.number || null,
         reinvestTicker: p['🎯 재투자 종목']?.rich_text[0]?.plain_text || null,
         buyPrice: p['🛒 매수 단가(USD)']?.number || null,
