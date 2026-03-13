@@ -10,7 +10,6 @@ const notionDatabaseId = process.env.NOTION_DATABASE_ID || '';
 export default async function handler(req: Request, res: Response) {
   // CORS 헤더 설정
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  // 중요: 실제 프로덕션 환경에서는 '*' 대신 앱의 정확한 도메인을 적어주는 것이 안전합니다.
   res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.setHeader(
@@ -18,7 +17,7 @@ export default async function handler(req: Request, res: Response) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // 브라우저가 본 요청을 보내기 전에 보내는 '사전 요청(pre-flight request)'에 대한 처리
+  // OPTIONS 메소드에 대한 사전 처리
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -37,14 +36,18 @@ export default async function handler(req: Request, res: Response) {
 
     // Notion API 응답을 프론트엔드에서 사용하기 좋은 형태로 가공합니다.
     const formattedData = notionResponse.results.map((page: any) => {
-      const properties = page.properties;
+      const p = page.properties;
       return {
         id: page.id,
-        ticker: properties.ticker?.title[0]?.plain_text || null,
-        date: properties.date?.date?.start || null,
-        price: properties.price?.number || null,
-        quantity: properties.quantity?.number || null,
-        type: properties.type?.select?.name || null,
+        harvestMonth: p['📅 수확 월']?.date?.start || null,
+        dividendSource: p['🏧 배당 출처']?.title[0]?.plain_text || null,
+        harvestedDividend: p['💵 수확한 배당금(USD)']?.number || null,
+        reinvestTicker: p['🎯 재투자 종목']?.rich_text[0]?.plain_text || null,
+        buyPrice: p['🛒 매수 단가(USD)']?.number || null,
+        buyQuantity: p['📈 매수 수량']?.number || null,
+        remainingCash: p['💰 남은 달러 현금']?.number || null,
+        totalQqqm: p['🚀 누적 QQQM 수량']?.number || null,
+        totalSchd: p['누적 SCHD 수량']?.number || null,
       };
     });
 
