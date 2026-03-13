@@ -42,7 +42,7 @@ export default async function handler(req: Request, res: Response) {
         harvestMonth: p['📅 수확 월']?.date?.start || null,
         dividendSource: p['🏧 배당 출처']?.select?.name || null,
         harvestedDividend: p['💵 수확한 배당금(USD)']?.number || null,
-        reinvestTicker: p['🎯 재투자 종목']?.rich_text[0]?.plain_text || null,
+        reinvestTicker: p['🎯 재투자 종목']?.select?.name || null,
         buyPrice: p['🛒 매수 단가(USD)']?.number || null,
         buyQuantity: p['📈 매수 수량']?.number || null,
         remainingCash: p['💰 남은 달러 현금']?.number || null,
